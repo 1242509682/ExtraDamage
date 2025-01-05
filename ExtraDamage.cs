@@ -3,7 +3,6 @@ using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.Hooks;
-using Command = ExtraDamage.Command;
 
 namespace ExtraDamage;
 
@@ -13,7 +12,7 @@ public class ExtraDamage : TerrariaPlugin
     #region 插件信息
     public override string Name => "打怪额外伤害";
     public override string Author => "哨兵 羽学";
-    public override Version Version => new(1, 0, 0);
+    public override Version Version => new(1, 0, 1);
     public override string Description => "玩家在冷却时间后攻击怪物造成额外伤害并提示自己的额外伤害值气泡";
     #endregion
 
@@ -80,14 +79,20 @@ public class ExtraDamage : TerrariaPlugin
         //现在-玩家时间 >= 冷却时间 设置额外伤害
         if ((now - cooldowns[plr.name]).TotalSeconds >= Config.Cooldown)
         {
-            var damage = args.Damage * (Config.ExtraDamage * 0.01);
+            //额外伤害
+            var damage = args.Damage * Config.ExtraDamage;
             npc.life -= (int)damage;
             npc.netUpdate = true;
-
             TSPlayer.All.SendData(PacketTypes.CreateCombatTextExtended, $"{damage:F1}", (int)color[plr.name].PackedValue, npc.position.X, npc.position.Y - 3, 0f, 0);
+
+            //额外弹幕
+            if (Config.ExtraProj != null && Config.ExtraProj.Count > 0)
+            {
+                MyProjectile.SpawnProjectile(Config.ExtraProj, npc, args.KnockBack);
+            }
 
             cooldowns[plr.name] = now;
         }
-    } 
+    }
     #endregion
 }

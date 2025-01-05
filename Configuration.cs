@@ -12,10 +12,10 @@ internal class Configuration
     public bool Enabled { get; set; } = true;
 
     [JsonProperty("额外伤害", Order = 1)]
-    public float ExtraDamage { get; set; } = 10f;
+    public double ExtraDamage { get; set; } = 0.1;
 
     [JsonProperty("冷却时间", Order = 2)]
-    public int Cooldown { get; set; } = 5;
+    public int Cooldown { get; set; } = 1;
 
     [JsonConverter(typeof(ColorJsonConverter))]
     [JsonProperty("默认颜色", Order = 3)]
@@ -24,7 +24,10 @@ internal class Configuration
     [JsonProperty("低于生命不增伤", Order = 4)]
     public int Life { get; set; } = 10;
 
-    [JsonProperty("免疫额外伤害NPC表", Order = 5)]
+    [JsonProperty("额外弹幕", Order = 5)]
+    public List<ProjData> ExtraProj { get; set; } = new List<ProjData>();
+
+    [JsonProperty("免疫额外伤害NPC表", Order = 6)]
     public List<int> NPClist { get; set; } = new List<int>();
     #endregion
 
@@ -32,6 +35,29 @@ internal class Configuration
     private void Ints()
     {
         ColorRGB = new Color(255, 255, 255);
+
+        ExtraProj = new List<ProjData>()
+        {
+            new ProjData()
+            {
+                ID = 118,
+                Damage = 10,
+                Count = 5,
+                Velocity = 10f,
+                Angle = 25f,
+                life = 180,
+            },
+
+            new ProjData()
+            {
+                ID = 173,
+                Damage = 10,
+                Count = 30,
+                Velocity = 20f,
+                Angle = -360f,
+                life = 120,
+            }
+        };
 
         //预设这些NPCID都是城镇NPC
         NPClist = new List<int>
