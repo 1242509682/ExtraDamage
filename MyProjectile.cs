@@ -1,5 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
+﻿using Terraria;
+using TShockAPI;
+using Microsoft.Xna.Framework;
 
 namespace ExtraDamage;
 
@@ -7,7 +8,7 @@ internal class MyProjectile
 {
     #region 弹幕生成方法
     private static int index = 0;
-    public static void SpawnProjectile(List<ProjData> data, NPC npc, float knockBack)
+    public static void SpawnProjectile(List<ProjData> data, NPC npc, int damage, float knockBack)
     {
         if (data == null || data.Count <= 0) return;
         var proj = data[index];
@@ -47,7 +48,7 @@ internal class MyProjectile
 
             // 创建并发射弹幕
             var newProj = Projectile.NewProjectile(Projectile.GetNoneSource(),plr.Center.X, plr.Center.Y, vel.X, vel.Y,
-                                                   proj.ID, proj.Damage, knockBack, Main.myPlayer, ai0, ai1, ai2);
+                                                   proj.ID, damage, knockBack, Main.myPlayer, ai0, ai1, ai2);
 
             // 弹幕生命
             Main.projectile[newProj].timeLeft = proj.life > 0 ? proj.life : 0;
@@ -56,6 +57,9 @@ internal class MyProjectile
                 Main.projectile[newProj].Kill();
             }
 
+            Main.projectile[newProj].friendly = true; // 将敌对弹幕转为友方弹幕
+
+            TSPlayer.All.SendData(PacketTypes.ProjectileNew, null, newProj);
         }
 
         Next(data); // 移动到下一个要发射的弹幕

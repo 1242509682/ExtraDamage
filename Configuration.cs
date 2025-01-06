@@ -11,23 +11,30 @@ internal class Configuration
     [JsonProperty("插件开关", Order = 0)]
     public bool Enabled { get; set; } = true;
 
-    [JsonProperty("额外伤害", Order = 1)]
-    public double ExtraDamage { get; set; } = 0.1;
-
-    [JsonProperty("冷却时间", Order = 2)]
-    public int Cooldown { get; set; } = 1;
-
-    [JsonConverter(typeof(ColorJsonConverter))]
-    [JsonProperty("默认颜色", Order = 3)]
-    public Color ColorRGB { get; set; } = new Color(255, 255, 255); // 预设颜色为白色
-
-    [JsonProperty("低于生命不增伤", Order = 4)]
+    [JsonProperty("冷却时间", Order = 1)]
+    public int Cooldown { get; set; } = 5;
+    [JsonProperty("额外伤害", Order = 2)]
+    public double ExtraDamage { get; set; } = 0.25;
+    [JsonProperty("低于生命不增伤", Order = 3)]
     public int Life { get; set; } = 10;
 
-    [JsonProperty("额外弹幕", Order = 5)]
+    [JsonProperty("启用范围伤害", Order = 4)]
+    public bool RangeDamage { get; set; } = true;
+    [JsonProperty("最大范围格数", Order = 5)]
+    public int MaxRange { get; set; } = 10;
+
+    [JsonConverter(typeof(ColorJsonConverter))]
+    [JsonProperty("默认颜色", Order = 6)]
+    public Color ColorRGB { get; set; } = new Color(255, 255, 255); // 预设颜色为白色
+
+    [JsonProperty("启用额外弹幕", Order = 7)]
+    public bool ProjEnabled { get; set; } = true;
+    [JsonProperty("弹幕最低伤害", Order = 8)]
+    public int projDamage { get; set; } = 10;
+    [JsonProperty("额外弹幕", Order = 9)]
     public List<ProjData> ExtraProj { get; set; } = new List<ProjData>();
 
-    [JsonProperty("免疫额外伤害NPC表", Order = 6)]
+    [JsonProperty("免疫额外伤害NPC表", Order = 10)]
     public List<int> NPClist { get; set; } = new List<int>();
     #endregion
 
@@ -41,7 +48,6 @@ internal class Configuration
             new ProjData()
             {
                 ID = 118,
-                Damage = 10,
                 Count = 5,
                 Velocity = 10f,
                 Angle = 25f,
@@ -51,11 +57,23 @@ internal class Configuration
             new ProjData()
             {
                 ID = 173,
-                Damage = 10,
                 Count = 30,
                 Velocity = 20f,
                 Angle = -360f,
                 life = 120,
+            },
+
+            new ProjData()
+            {
+                ID = 464,
+                Count = 6,
+                Velocity = 10f,
+                Angle = 15f,
+                ai = new Dictionary<int, float>
+                {
+                    {1, 100f},
+                },
+                life = 180,
             }
         };
 

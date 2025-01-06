@@ -23,9 +23,9 @@ public class Command
             {
                 if (double.TryParse(args.Parameters[0], out var damage) && int.TryParse(args.Parameters[1], out var cooldown))
                 {
-                    ExtraDamage.Config.ExtraDamage = damage;
-                    ExtraDamage.Config.Cooldown = cooldown;
-                    ExtraDamage.Config.Write();
+                    Config.ExtraDamage = damage;
+                    Config.Cooldown = cooldown;
+                    Config.Write();
 
                     args.Player.SendSuccessMessage($"额外伤害设置为{damage}%，冷却时间设置为{cooldown}秒");
                     return;
