@@ -12,7 +12,7 @@ public class ExtraDamage : TerrariaPlugin
     #region 插件信息
     public override string Name => "打怪额外伤害";
     public override string Author => "哨兵 羽学";
-    public override Version Version => new(1, 0, 2);
+    public override Version Version => new(1, 0, 3);
     public override string Description => "玩家在冷却时间后攻击怪物造成额外伤害并提示自己的额外伤害值气泡";
     #endregion
 
@@ -65,7 +65,7 @@ public class ExtraDamage : TerrariaPlugin
         }
 
         //低于生命不增伤
-        var life = (int)(npc.life / (float)npc.lifeMax * 100);
+        var life = npc.life / (float)npc.lifeMax;
         if (life <= Config.Life)
         {
             return;
@@ -112,15 +112,7 @@ public class ExtraDamage : TerrariaPlugin
             // 额外弹幕
             if (Config.ProjEnabled && Config.ExtraProj != null && Config.ExtraProj.Count > 0)
             {
-                var min = Config.projDamage; // 最小伤害
-                var max = plr.GetWeaponDamage(plr.HeldItem); // 获取玩家武器伤害值作为最大伤害
-                min = args.Critical ? min * 2 : min; // 暴击则最小伤害翻倍
-                if (max < min) // 如果武器伤害低于最小伤害，则将最大伤害设置为最小伤害
-                {
-                    max = min; 
-                }
-                var Damage = Random.Shared.Next(min, max + 1); // 生成随机伤害值，并确保不低于最小值且不高于最大值
-                MyProjectile.SpawnProjectile(Config.ExtraProj, npc, Damage, args.KnockBack);
+                MyProjectile.SpawnProjectile(Config.ExtraProj, npc, args.KnockBack);
             }
 
             cooldowns[plr.name] = now;

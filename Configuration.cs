@@ -12,11 +12,11 @@ internal class Configuration
     public bool Enabled { get; set; } = true;
 
     [JsonProperty("冷却时间", Order = 1)]
-    public int Cooldown { get; set; } = 5;
+    public double Cooldown { get; set; } = 0.01;
     [JsonProperty("额外伤害", Order = 2)]
-    public double ExtraDamage { get; set; } = 0.25;
-    [JsonProperty("低于生命不增伤", Order = 3)]
-    public int Life { get; set; } = 10;
+    public double ExtraDamage { get; set; } = 0.5;
+    [JsonProperty("怪物低于生命不增伤", Order = 3)]
+    public double Life { get; set; } = 0.1;
 
     [JsonProperty("启用范围伤害", Order = 4)]
     public bool RangeDamage { get; set; } = true;
@@ -47,34 +47,63 @@ internal class Configuration
         {
             new ProjData()
             {
+                TarCenter = true,
                 ID = 118,
+                damage = 40,
                 Count = 5,
                 Velocity = 10f,
+                decay = 0.9f,
+                CEC = 75f,
                 Angle = 25f,
+                Rotate = 0f,
                 life = 180,
             },
 
             new ProjData()
             {
+                TarCenter = false,
                 ID = 173,
+                damage = 20,
                 Count = 30,
                 Velocity = 20f,
+                decay = 0.9f,
+                CEC = 0f,
                 Angle = -360f,
+                Rotate = 5f,
                 life = 120,
             },
 
             new ProjData()
             {
-                ID = 464,
-                Count = 6,
+                TarCenter = false,
+                ID = 731,
+                damage = 40,
+                Count = 15,
                 Velocity = 10f,
+                decay = 0.5f,
+                CEC = -90f,
                 Angle = 15f,
+                Rotate = 30f,
                 ai = new Dictionary<int, float>
                 {
-                    {1, 100f},
+                    {0, 100f},
                 },
-                life = 180,
-            }
+                life = 240,
+            },
+
+            new ProjData()
+            {
+                TarCenter = true,
+                ID = 173,
+                damage = 30,
+                Count = 30,
+                Velocity = 10f,
+                decay = 0.7f,
+                CEC = 0f,
+                Angle = -360f,
+                Rotate = 0f,
+                life = 120,
+            },
         };
 
         //预设这些NPCID都是城镇NPC

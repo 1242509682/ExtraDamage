@@ -21,7 +21,7 @@ public class Command
         {
             if (args.Parameters.Count == 2)
             {
-                if (double.TryParse(args.Parameters[0], out var damage) && int.TryParse(args.Parameters[1], out var cooldown))
+                if (double.TryParse(args.Parameters[0], out var damage) && double.TryParse(args.Parameters[1], out var cooldown))
                 {
                     Config.ExtraDamage = damage;
                     Config.Cooldown = cooldown;
