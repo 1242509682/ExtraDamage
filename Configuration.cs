@@ -12,7 +12,7 @@ internal class Configuration
     public bool Enabled { get; set; } = true;
 
     [JsonProperty("冷却时间", Order = 1)]
-    public double Cooldown { get; set; } = 0.01;
+    public double Cooldown { get; set; } = 5.01;
     [JsonProperty("额外伤害", Order = 2)]
     public double ExtraDamage { get; set; } = 0.5;
     [JsonProperty("怪物低于生命不增伤", Order = 3)]
@@ -67,10 +67,24 @@ internal class Configuration
                 Count = 30,
                 Velocity = 20f,
                 decay = 0.9f,
-                CEC = 0f,
+                CEC = -70f,
                 Angle = -360f,
                 Rotate = 5f,
                 life = 120,
+            },
+
+            new ProjData()
+            {
+                TarCenter = false,
+                ID = 931,
+                damage = 10,
+                Count = 10,
+                Velocity = 10f,
+                decay = 0.99f,
+                CEC = 15,
+                Angle = 7f,
+                Rotate = -45f,
+                life = 240,
             },
 
             new ProjData()
@@ -80,8 +94,8 @@ internal class Configuration
                 damage = 40,
                 Count = 15,
                 Velocity = 10f,
-                decay = 0.5f,
-                CEC = -90f,
+                decay = 0.99f,
+                CEC = 0f,
                 Angle = 15f,
                 Rotate = 30f,
                 ai = new Dictionary<int, float>
@@ -101,8 +115,22 @@ internal class Configuration
                 decay = 0.7f,
                 CEC = 0f,
                 Angle = -360f,
-                Rotate = 0f,
+                Rotate = 5f,
                 life = 120,
+            },
+
+            new ProjData()
+            {
+                TarCenter = true,
+                ID = 931,
+                damage = 15,
+                Count = 10,
+                Velocity = 10f,
+                decay = 0.99f,
+                CEC = 0,
+                Angle = 15f,
+                Rotate = -5f,
+                life = 240,
             },
         };
 

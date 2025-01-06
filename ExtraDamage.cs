@@ -112,7 +112,8 @@ public class ExtraDamage : TerrariaPlugin
             // 额外弹幕
             if (Config.ProjEnabled && Config.ExtraProj != null && Config.ExtraProj.Count > 0)
             {
-                MyProjectile.SpawnProjectile(Config.ExtraProj, npc, args.KnockBack);
+                var Source = plr.GetProjectileSource_Item(plr.HeldItem);
+                MyProjectile.SpawnProjectile(Source, Config.ExtraProj, npc, args.KnockBack);
             }
 
             cooldowns[plr.name] = now;

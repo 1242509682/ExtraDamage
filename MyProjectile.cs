@@ -8,7 +8,7 @@ internal class MyProjectile
 {
     #region 弹幕生成方法
     private static int index = 0;
-    public static void SpawnProjectile(List<ProjData> data, NPC npc, float knockBack)
+    public static void SpawnProjectile(Terraria.DataStructures.IEntitySource Source, List<ProjData> data, NPC npc, float knockBack)
     {
         if (data == null || data.Count <= 0) return;
         var proj = data[index];
@@ -57,27 +57,14 @@ internal class MyProjectile
                 vel = vel.RotatedBy(Angle + proj.Rotate * i);
             }
 
-            // 计算中心扩展偏移量
-            var Center = Vector2.Zero;
-            if (proj.CEC > 0)
-            {
-                // 中心向外的单位向量，并乘以扩展距离
-                Center = dict.SafeNormalize(Vector2.Zero) * proj.CEC;
-            }
-            else
-            {
-                // 中心向内的单位向量，并除以扩展距离
-                Center = dict.SafeNormalize(Vector2.Zero) / proj.CEC;
-            }
-
             // 如果中心扩展不为0，则应用中心外扩或内缩
             var NewPos = pos;
             if (proj.CEC != 0)
             {
                 // 计算相对于中心点的偏移量
                 var ExAngle = i / (float)(proj.Count - 1) * MathHelper.TwoPi; // 均匀分布的角度
-                var absExpansion = Math.Abs(proj.CEC); // 使用绝对值以确保正确的扩展距离
-                var offset = new Vector2((float)Math.Cos(ExAngle), (float)Math.Sin(ExAngle)) * absExpansion;
+                var absEx = Math.Abs(proj.CEC); // 使用绝对值以确保正确的扩展距离
+                var offset = new Vector2((float)Math.Cos(ExAngle), (float)Math.Sin(ExAngle)) * absEx;
 
                 // 如果 CEC 是负数，则反向偏移量
                 if (proj.CEC < 0)
@@ -88,8 +75,7 @@ internal class MyProjectile
             }
 
             //创建并发射弹幕
-            var newProj = Projectile.NewProjectile(Projectile.GetNoneSource(),
-                                                   NewPos.X, NewPos.Y,vel.X, vel.Y,
+            var newProj = Projectile.NewProjectile(Source, NewPos.X, NewPos.Y,vel.X, vel.Y,
                                                    proj.ID, proj.damage, knockBack, 
                                                    Main.myPlayer, ai0, ai1, ai2);
             // 弹幕生命
