@@ -115,6 +115,10 @@ public class ExtraDamage : TerrariaPlugin
                 var min = Config.projDamage; // 最小伤害
                 var max = plr.GetWeaponDamage(plr.HeldItem); // 获取玩家武器伤害值作为最大伤害
                 min = args.Critical ? min * 2 : min; // 暴击则最小伤害翻倍
+                if (max < min) // 如果武器伤害低于最小伤害，则将最大伤害设置为最小伤害
+                {
+                    max = min; 
+                }
                 var Damage = Random.Shared.Next(min, max + 1); // 生成随机伤害值，并确保不低于最小值且不高于最大值
                 MyProjectile.SpawnProjectile(Config.ExtraProj, npc, Damage, args.KnockBack);
             }
