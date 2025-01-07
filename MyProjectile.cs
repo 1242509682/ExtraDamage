@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ExtraDamage.Progress;
+using Microsoft.Xna.Framework;
 using Terraria;
 
 
@@ -16,7 +17,10 @@ internal class MyProjectile
         // 获取距离和方向向量
         var tar = npc.GetTargetData(true);
         var dict = npc.Center - tar.Center;
-        if (tar.Invalid || proj.ID <= 0) // 目标无效则跳过
+
+        // 目标无效或不在进度则跳过
+        if (tar.Invalid || proj.ID <= 0 ||
+            !ProgressChecker.IsProgress(proj.isProgress)) 
         {
             Next(data);
             return;
@@ -41,14 +45,14 @@ internal class MyProjectile
         for (var i = 0; i < proj.Count; i++)
         {
             // 计算衰减值，随着弹幕数量的增加而减慢
-            var decay = 1.0f - i / (float)proj.Count * proj.decay;
+            var decay = 1.0f - i / (float)proj.Count * 0.9f;
 
             // 应用发射速度
             var speed = proj.Velocity * decay;
             var vel = dict.SafeNormalize(Vector2.Zero) * speed;
 
             // 应用角度偏移
-            var Angle = (i - (proj.Count - 1) / 2.0f) * addRadian;
+            var Angle = (i - (proj.Count - 1) / 2) * addRadian;
             vel = vel.RotatedBy(Angle);
 
             // 如果旋转角度不为0，则设置旋转角度
@@ -57,17 +61,15 @@ internal class MyProjectile
                 vel = vel.RotatedBy(Angle + proj.Rotate * i);
             }
 
-            // 如果中心扩展不为0，则应用中心外扩或内缩
+            // 如果中心半径不为0，则应用中心外扩或内缩
             var NewPos = pos;
-            if (proj.CEC != 0)
+            if (proj.Radius != 0)
             {
                 // 计算相对于中心点的偏移量
                 var ExAngle = i / (float)(proj.Count - 1) * MathHelper.TwoPi; // 均匀分布的角度
-                var absEx = Math.Abs(proj.CEC); // 使用绝对值以确保正确的扩展距离
-                var offset = new Vector2((float)Math.Cos(ExAngle), (float)Math.Sin(ExAngle)) * absEx;
-
-                // 如果 CEC 是负数，则反向偏移量
-                if (proj.CEC < 0)
+                var offset = new Vector2((float)Math.Cos(ExAngle), (float)Math.Sin(ExAngle)) * proj.Radius;
+                // 如果 偏移半径 是负数，则反向偏移量
+                if (proj.Radius < 0)
                 {
                     offset *= -1;
                 }
