@@ -19,8 +19,7 @@ internal class MyProjectile
         var dict = npc.Center - tar.Center;
 
         // 目标无效或不在进度则跳过
-        if (tar.Invalid || proj.ID <= 0 ||
-            !ProgressChecker.IsProgress(proj.isProgress)) 
+        if (tar.Invalid || proj.ID <= 0)
         {
             Next(data);
             return;
@@ -76,15 +75,19 @@ internal class MyProjectile
                 NewPos += offset;
             }
 
-            //创建并发射弹幕
-            var newProj = Projectile.NewProjectile(Source, NewPos.X, NewPos.Y,vel.X, vel.Y,
-                                                   proj.ID, proj.damage, knockBack, 
-                                                   Main.myPlayer, ai0, ai1, ai2);
-            // 弹幕生命
-            Main.projectile[newProj].timeLeft = proj.life > 0 ? proj.life : 0;
-            if (proj.life == 0)
+            //只发射符合当前进度的额外弹幕
+            if (ProgressChecker.IsProgress(proj.isProgress))
             {
-                Main.projectile[newProj].Kill();
+                //创建并发射弹幕
+                var newProj = Projectile.NewProjectile(Source, NewPos.X, NewPos.Y, vel.X, vel.Y,
+                                                       proj.ID, proj.damage, knockBack,
+                                                       Main.myPlayer, ai0, ai1, ai2);
+                // 弹幕生命
+                Main.projectile[newProj].timeLeft = proj.life > 0 ? proj.life : 0;
+                if (proj.life == 0)
+                {
+                    Main.projectile[newProj].Kill();
+                }
             }
         }
 

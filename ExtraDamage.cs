@@ -12,7 +12,7 @@ public class ExtraDamage : TerrariaPlugin
     #region 插件信息
     public override string Name => "打怪额外伤害";
     public override string Author => "哨兵 羽学";
-    public override Version Version => new(1, 0, 4);
+    public override Version Version => new(1, 0, 5);
     public override string Description => "玩家在冷却时间后攻击怪物造成额外伤害并提示自己的额外伤害值气泡";
     #endregion
 
