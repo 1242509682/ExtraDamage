@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using TerrariaApi.Server;
+﻿using Terraria;
 using TShockAPI;
 using TShockAPI.Hooks;
+using TerrariaApi.Server;
+using Microsoft.Xna.Framework;
 
 namespace ExtraDamage;
 
@@ -12,7 +12,7 @@ public class ExtraDamage : TerrariaPlugin
     #region 插件信息
     public override string Name => "打怪额外伤害";
     public override string Author => "哨兵 羽学";
-    public override Version Version => new(1, 0, 5);
+    public override Version Version => new(1, 0, 6);
     public override string Description => "玩家在冷却时间后攻击怪物造成额外伤害并提示自己的额外伤害值气泡";
     #endregion
 
@@ -87,7 +87,7 @@ public class ExtraDamage : TerrariaPlugin
             npc.netUpdate = true;
 
             //发送悬浮文字
-            TSPlayer.All.SendData(PacketTypes.CreateCombatTextExtended, $"{damage:F1}",
+            TSPlayer.All.SendData(PacketTypes.CreateCombatTextExtended, $"{damage:F0}",
                                  (int)color[plr.name].PackedValue, npc.position.X, npc.position.Y - 3, 0f, 0);
 
             //范围伤害
@@ -102,10 +102,28 @@ public class ExtraDamage : TerrariaPlugin
                 {
                     npc2.StrikeNPC((int)damage, args.KnockBack, args.HitDirection, args.Critical, args.NoEffect, args.FromNet);
                     npc2.netUpdate = true;
-
                     //发送悬浮文字
-                    TSPlayer.All.SendData(PacketTypes.CreateCombatTextExtended, $"{damage:F1}",
-                                         (int)color[plr.name].PackedValue, npc2.position.X, npc2.position.Y - 3, 0f, 0);
+                    TSPlayer.All.SendData(PacketTypes.CreateCombatTextExtended, $"{damage:F0}",
+                                         (int)Color.CadetBlue.packedValue, npc2.position.X, npc2.position.Y - 3, 0f, 0);
+                }
+            }
+
+            //回血
+            if (Config.HealLife > 0)
+            {
+                NetMessage.SendData((int)PacketTypes.PlayerHealOther, -1, -1, Terraria.Localization.NetworkText.Empty, plr.whoAmI, Config.HealLife);
+            }
+
+            //回蓝
+            if (Config.HealMana > 0)
+            {
+                plr.statMana += Config.HealMana;
+                var tplr = TShock.Players.FirstOrDefault(x => x != null && x.Active && x.IsLoggedIn && x.Name == plr.name);
+                if (tplr != null)
+                {
+                    tplr.SendData(PacketTypes.PlayerMana, null, tplr.Index);
+                    tplr.SendData(PacketTypes.CreateCombatTextExtended, $"{Config.HealMana:F0}",
+                                 (int)Color.MediumSlateBlue.packedValue, plr.position.X, plr.position.Y - 3, 0f, 0);
                 }
             }
 

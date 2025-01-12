@@ -19,12 +19,14 @@ public class ProjData
     public float Angle = 15f;
     [JsonProperty("旋转", Order = 6)]
     public float Rotate = 5f;
-    [JsonProperty("AI", Order = 7)]
+    [JsonProperty("角度修正", Order = 7)]
+    public bool Correct = true;
+    [JsonProperty("AI", Order = 8)]
     public Dictionary<int, float> ai { get; set; } = new Dictionary<int, float>();
-    [JsonProperty("生命", Order = 8)]
+    [JsonProperty("生命", Order = 9)]
     public int life = 60;
-    [JsonProperty("进度限制", Order = 9)]
+    [JsonProperty("进度限制", Order = 10)]
     public ProgressType isProgress { get; set; } = ProgressType.None;
-    [JsonProperty("以玩家为中心", Order = 10)]
+    [JsonProperty("以玩家为中心", Order = 11)]
     public bool TarCenter = true;
 }

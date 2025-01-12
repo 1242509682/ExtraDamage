@@ -15,26 +15,30 @@ internal class Configuration
     public double Cooldown { get; set; } = 5.01;
     [JsonProperty("额外伤害", Order = 2)]
     public double ExtraDamage { get; set; } = 0.5;
-    [JsonProperty("怪物低于生命不增伤", Order = 3)]
+
+    [JsonProperty("回血", Order = 3)]
+    public int HealLife { get; set; } = 20;
+    [JsonProperty("回蓝", Order = 4)]
+    public int HealMana { get; set; } = 100;
+
+    [JsonProperty("怪物低于生命不增伤", Order = 5)]
     public double Life { get; set; } = 0.1;
 
-    [JsonProperty("启用范围伤害", Order = 4)]
+    [JsonProperty("启用范围伤害", Order = 6)]
     public bool RangeDamage { get; set; } = true;
-    [JsonProperty("最大范围格数", Order = 5)]
+    [JsonProperty("最大范围格数", Order = 7)]
     public int MaxRange { get; set; } = 10;
 
     [JsonConverter(typeof(ColorJsonConverter))]
-    [JsonProperty("默认颜色", Order = 6)]
+    [JsonProperty("默认颜色", Order = 8)]
     public Color ColorRGB { get; set; } = new Color(255, 255, 255); // 预设颜色为白色
 
-    [JsonProperty("启用额外弹幕", Order = 7)]
+    [JsonProperty("启用额外弹幕", Order = 9)]
     public bool ProjEnabled { get; set; } = true;
-    [JsonProperty("弹幕最低伤害", Order = 8)]
-    public int projDamage { get; set; } = 10;
-    [JsonProperty("额外弹幕", Order = 9)]
+    [JsonProperty("额外弹幕", Order = 10)]
     public List<ProjData> ExtraProj { get; set; } = new List<ProjData>();
 
-    [JsonProperty("免疫额外伤害NPC表", Order = 10)]
+    [JsonProperty("免疫额外伤害NPC表", Order = 11)]
     public List<int> NPClist { get; set; } = new List<int>();
     #endregion
 
@@ -48,6 +52,7 @@ internal class Configuration
             new ProjData()
             {
                 TarCenter = true,
+                Correct = false,
                 ID = 118,
                 damage = 40,
                 Count = 5,

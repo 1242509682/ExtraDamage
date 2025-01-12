@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 
-
 namespace ExtraDamage;
 
 internal class MyProjectile
@@ -26,7 +25,10 @@ internal class MyProjectile
         }
 
         // 弧度：定义总角度范围的一半（从中心线两侧各偏移） 
-        var radian = proj.Angle * (float)Math.PI / 180;
+        var radian = proj.Correct
+                     ? Correct(proj, npc)
+                     : proj.Angle * Math.PI / 180;
+
         // 计算每次发射的弧度增量
         var addRadian = radian * 2 / (proj.Count - 1);
 
@@ -104,6 +106,27 @@ internal class MyProjectile
             index = 0;
         }
     }
+    #endregion
+
+    #region 修正弹幕角度方法
+    private static bool reverse;
+    private static double Correct(ProjData proj, NPC npc)
+    {
+        reverse ^= true;
+        var sign = reverse ? 1 : -1;
+
+        // 获取玩家的目标旋转角度
+        double num = Main.player[npc.target].itemRotation;
+
+        // 如果玩家面朝左侧，则调整角度以确保正确的物品使用方向
+        if (Main.player[npc.target].direction == -1)
+        {
+            num += Math.PI; // 增加π弧度（即180度）来反转角度
+        }
+
+        // 返回调整后的弧度值
+        return num + proj.Angle * Math.PI / 180 * sign;
+    } 
     #endregion
 
 }
